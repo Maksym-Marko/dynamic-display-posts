@@ -1,0 +1,396 @@
+/*css styles*/
+.mx-iile-ddp-form small {
+    display: none;
+    color: red;
+}
+.mx_invalid_form .mx_empty_field + small,
+.mx_invalid_form .mx_empty_field ~ small {
+    display: block;
+}
+.mx_invalid_form .mx_empty_field ~ small.mx_small_inv_email {
+    display: none;
+}
+.mx_invalid_form .mx_incorrect_email ~ small.mx_small_inv_email {
+    display: block;
+}
+.mx_invalid_form .mx_empty_field.mx_incorrect_email ~ small.mx_small_inv_email {
+    display: none;
+}
+.mx-send-message img {
+    width: 60px;
+    display: none;
+}
+.mx_message_sending .mx-send-message img {
+    display: block;
+}
+.mx_message_sending .mx-send-message button {
+    display: none;
+}
+.mx-thank-you-for-message {
+    display: none;
+    background: #cefedf;
+    text-align: center;
+    padding: 20px;
+    margin: 20px 0px;
+}
+.mx-message-has-sent .mx-thank-you-for-message {
+    display: block;
+}
+.mx-message-has-sent .mx-send-message button {
+    display: none;
+}
+.mx-ddp-item {
+    border: 1px solid #E0E0E0;
+    margin-bottom: 15px;
+}
+
+/*ddp form*/
+#mx_iile_ddp > div {
+    width: 100%;
+}
+#mx_iile_ddp {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    width: 100%;
+    min-width: 100%;
+}
+.mx-iile-ddp-form {
+    max-width: 700px;
+    width: 100%;
+    margin: auto;
+}
+.mx-form-control {
+    margin-bottom: 15px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.mx-two-inputs-row {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.mx-two-inputs-row .mx-form-control {
+    max-width: 335px;
+    width: 100%;    
+}
+.mx-form-control input[type="text"],
+.mx-form-control input[type="email"] {
+    width: 100%;
+    border: 1px solid #999;
+    border-radius: 5px;
+    height: 35px;
+    font-size: 13px;
+    color: black;
+}
+.mx-ddp-list-of-items {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column;
+            flex-flow: column;
+    width: 100%;
+}
+.mx-ddp-item-header {
+    background-color: #E0E0E0;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.mx-ddp-item-header div {
+    padding: 5px;
+    font-weight: 600;
+}
+.mx-ddp-item-body div {
+    padding: 10px 5px;
+}
+.mx-ddp-item-subject {
+    margin: auto;
+    margin-left: 15px;
+    font-weight: 600;
+    color: #003087;
+}
+.mx-ddp-item-user {
+    border-left: 2px solid #F4F4F4;
+    max-width: 150px;
+    width: 100%;
+}
+.mx-ddp-item-answer {
+    border-top: 1px solid #E0E0E0;
+    font-weight: 600;
+    color: #003087;
+}
+.mx-form-control textarea {
+    font-size: 13px;
+    color: black;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+.mx-form-title {
+    background: #003087;
+    height: auto;
+    display: block;
+    width: 100%;
+    margin-bottom: 40px;
+}
+.mx-form-title span {
+    font-size: 18px;
+    padding: 10px 5px;
+    text-align: center;
+    line-height: 26px;
+    display: block;
+    font-family: Verdana, Arial;
+    font-weight: normal;
+    color: #fff;
+}
+.mx-iile-ddp-form-wrap {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    -o-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column;
+            flex-flow: column;
+    width: 100%;
+}
+.mx-send-message {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.mx-send-message button {
+    background-color: #003087;
+    color: #fff;
+    font-size: 16px;
+    line-height: 18px;
+    padding: 7px 14px 8px;
+    margin: auto;
+}
+.mx-send-message button:hover {
+    background-color: #159CE8;
+}
+button {
+    -webkit-transition: 0.3s all ease;
+    -o-transition: 0.3s all ease;
+    transition: 0.3s all ease;
+}
+button:hover {
+    -webkit-transition: 0.3s all ease;
+    -o-transition: 0.3s all ease;
+    transition: 0.3s all ease;
+    cursor: pointer;
+}
+label[for="mx_agrement"]{
+    font-family: 'Calibri', 'Arial', 'Times New Roman';
+    font-size: 14px;
+    color: #666;
+}
+.mx-form-control input[type="checkbox"] {
+    height: 15px;
+    width: 15px;
+    margin: auto 15px;
+    min-width: 15px;
+}
+
+/*pagination*/
+#mx_iile_ddp ul.mx-ddp-pagination {
+    list-style-type: none;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 6px;
+}
+ul.mx-ddp-pagination li {
+    display: inline-block;
+}
+ul.mx-ddp-pagination li a {
+    text-decoration: none;
+    padding: 6px 10px;
+}
+ul.mx-ddp-pagination li.mx-current-page a,
+ul.mx-ddp-pagination li a:hover {
+    background: #003087;
+    color: #fff;
+}
+.mx-displat-none {
+    display: none;
+}
+.mx-displat-block {
+    display: block !important;
+}
+.mx-loading-ddp {
+    display: block;
+    text-align: center;
+}
+.mx-loading-ddp img {
+    width: 100px;
+}
+
+/*search*/
+.mx-no-items-found {
+    margin-bottom: 20px;
+}
+.mx-ddp-search {
+    padding: 10px 0px;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+.mx-ddp-search > div {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+.mx-make-question {
+
+}
+#mx_iile_ddp .mx-ddp-button {
+    text-align: center;
+    width: 150px;
+}
+#mx_iile_ddp .mx-ddp-button,
+#mx_iile_ddp .mx-ddp-button:visited {
+    background-color: #003087;
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 18px;
+    padding: 7px 14px 8px;
+    margin: auto 0;
+    text-decoration: none;
+    display: block;
+    border-color: #aaa #bbb #bbb;
+    border-radius: 3px;
+    outline: none;
+}
+#mx_iile_ddp .mx-ddp-button:hover,
+#mx_iile_ddp .mx-ddp-button:focus,
+#mx_iile_ddp .mx-ddp-button:active {
+    background-color: #159CE8;
+    color: #ffffff;
+}
+
+/*recaptcha*/
+.mx-recaptcha-wrap {
+    margin-bottom: 20px;
+}
+
+a.mx-people-link {
+    color: #4dc442;
+}
+
+/*media*/
+@media screen and (max-width: 1150px) {
+    .mx-two-inputs-row .mx-form-control {
+        max-width: 325px;
+    }
+}
+@media screen and (max-width: 1100px) {
+    .mx-two-inputs-row .mx-form-control {
+        max-width: 275px;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .mx-two-inputs-row .mx-form-control {
+        max-width: 270px;
+    }
+}
+@media screen and (max-width: 992px) {
+    .mx-two-inputs-row .mx-form-control {
+        max-width: 100%;
+    }
+    .mx-form-control input[type="checkbox"] {
+        margin: auto 4px auto 0;
+    }
+    label[for="mx_agrement"] {
+        width: 90%;
+    }
+}
+@media screen and (max-width: 768px) {
+    .mx-ddp-search {
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;        
+    }
+    .mx-ddp-search > div {
+        -webkit-box-ordinal-group: 3;
+            -ms-flex-order: 2;
+                order: 2;
+        margin-bottom: 20px;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center; 
+    }
+    .mx-ddp-search > div.mx-make-question {
+        -webkit-box-ordinal-group: 2;
+            -ms-flex-order: 1;
+                order: 1;
+        width: 100%;
+       display: -moz-flex;
+       display: -ms-flex;
+       display: -o-flex;
+       display: -webkit-box;
+       display: -ms-flexbox;
+       display: flex;
+    }
+}
