@@ -41,7 +41,15 @@ class MX_DDP_Database_Talk
 
 			if( empty( $_POST['nonce'] ) ) wp_die();
 
-			if( wp_verify_nonce( $_POST['nonce'], 'mxvjfepcdata_nonce_request_front' ) ) {
+			if( wp_verify_nonce( $_POST['nonce'], 'mx_ddpdata_nonce_request_front' ) ) {
+
+				$post_type = 'post';
+
+				if( isset( $_POST['post_type'] ) ) {
+
+					$post_type = $_POST['post_type'];
+
+				}
 
 				$query = sanitize_text_field( $_POST['query'] );
 
@@ -84,17 +92,37 @@ class MX_DDP_Database_Talk
 
 				}
 
-				$posts_id_results = $wpdb->get_results( $sql_str );				
+				$posts_id_results = $wpdb->get_results( $sql_str );
+
+				// thumbnail size
+				$thumbnail_size = 'full';
+
+				if( $post_type === 'post' ) {
+
+					$thumbnail_size = 'mx_news_thumbnail';
+
+				}
+
+				if( $post_type === 'leeds_data' ) {
+
+					$thumbnail_size = 'mx_square_thumbnail';
+
+				}
 
 				foreach ( $posts_id_results as $key => $value ) {
 
-					$the_thumbnail = get_the_post_thumbnail_url( $value->ID );
+					$the_thumbnail = get_the_post_thumbnail_url( $value->ID, $thumbnail_size );
 
 					$posts_id_results[$key]->the_thumbnail = $the_thumbnail;
 
 					$the_permalink = get_the_permalink( $value->ID );
 
 					$posts_id_results[$key]->the_permalink = $the_permalink;
+
+					// tags
+					$tags = get_the_tags( $value->ID  );
+
+					$posts_id_results[$key]->tags = $tags;
 			
 				}				
 
@@ -108,90 +136,13 @@ class MX_DDP_Database_Talk
 
 		}
 
-		// add question
-		public static function add_new_ddp()
-		{
-			
-			if( empty( $_POST['nonce'] ) ) wp_die();
-
-			if( wp_verify_nonce( $_POST['nonce'], 'mxvjfepcdata_nonce_request_front' ) ) {
-
-				$post_ID = wp_insert_post(
-
-					array(
-
-						'post_title' 	=> sanitize_text_field( $_POST['subject'] ),
-						'post_content'	=> sanitize_textarea_field( $_POST['message'] ),
-						'post_type' 	=> 'leeds_people',
-						'post_status' 	=> 'verification'
-
-					)
-
-				);
-
-				if( gettype( $post_ID ) == 'integer' ) {
-
-					// user name
-					update_post_meta( $post_ID, '_mxffi_user_name', sanitize_text_field( $_POST['user_name'] ) );
-
-					// user email
-					update_post_meta( $post_ID, '_mxffi_user_email', sanitize_email( $_POST['user_email'] ) );
-
-					$email = get_option( '_mx_simple_ddp_admin_email' );
-
-					if( !$email ) {
-
-						$email = get_user_by( 'ID', 1 )->user_email;
-
-					}
-
-					$websit_name = get_bloginfo( 'name' );
-
-					$websit_domain = get_site_url();
-
-					$websit_domain = str_replace( 'http://', '', $websit_domain );
-
-					$websit_domain = str_replace( 'https://', '', $websit_domain );
-
-					$header  = 'From: ' . $websit_name .' <support@' . $websit_domain . '>' . "\r\n";
-					$header .= 'Reply-To: support@' . $websit_domain . "\r\n";
-
-					$header .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-					$subject = __( 'You\'ve received the new Question.', 'mxffi-domain' );
-
-					$message = '<p>' . __( 'User', 'mxffi-domain' ) . ' <b>' . esc_html( $_POST['user_name'] ) . '</b> ' . __( 'has sent a question.', 'mxffi-domain' ) . '</p>';
-
-					$message .= '<p><b>' . esc_html( $_POST['message'] ) . '</b></p>';					
-
-					add_filter( 'wp_mail_content_type', array( 'MX_DDP_Database_Talk', 'mx_send_html' ) );
-
-					wp_mail( $email, $subject, $message, $header );
-
-					remove_filter( 'wp_mail_content_type', array( 'MX_DDP_Database_Talk', 'mx_send_html' ) );
-
-				}
-
-				echo gettype( $post_ID );
-
-			}
-
-			wp_die();
-
-		}
-
-		public static function mx_send_html()
-		{
-			return "text/html";
-		}
-
 		// get ddp item
 		public static function mx_get_ddp_items()
 		{
 
 			if( empty( $_POST['nonce'] ) ) wp_die();
 
-			if( wp_verify_nonce( $_POST['nonce'], 'mxvjfepcdata_nonce_request_front' ) ) {	
+			if( wp_verify_nonce( $_POST['nonce'], 'mx_ddpdata_nonce_request_front' ) ) {	
 
 				$post_type = 'post';
 
@@ -242,7 +193,22 @@ class MX_DDP_Database_Talk
 
 				}
 
-				$posts_id_results = $wpdb->get_results( $sql_str );				
+				$posts_id_results = $wpdb->get_results( $sql_str );
+
+				// thumbnail size
+				$thumbnail_size = 'full';
+
+				if( $post_type === 'post' ) {
+
+					$thumbnail_size = 'mx_news_thumbnail';
+
+				}
+
+				if( $post_type === 'leeds_data' ) {
+
+					$thumbnail_size = 'mx_square_thumbnail';
+
+				}		
 
 				foreach ( $posts_id_results as $key => $value ) {
 
@@ -254,13 +220,30 @@ class MX_DDP_Database_Talk
 
 					// $posts_id_results[$key]->answer = $response;
 
-					$the_thumbnail = get_the_post_thumbnail_url( $value->ID );
+					$the_thumbnail = get_the_post_thumbnail_url( $value->ID, $thumbnail_size );
 
 					$posts_id_results[$key]->the_thumbnail = $the_thumbnail;
 
 					$the_permalink = get_the_permalink( $value->ID );
 
 					$posts_id_results[$key]->the_permalink = $the_permalink;
+
+					// tags
+					$tags = get_the_tags( $value->ID  );
+
+					if( $tags ) {
+
+						foreach ( $tags as $tag_key => $tag ) {
+
+							$link = mx_get_tag_link( $tag->term_id );
+
+							$tags[$tag_key]->tag_link = $link;
+
+						}
+
+					}
+
+					$posts_id_results[$key]->tags = $tags;					
 			
 				}				
 
@@ -280,7 +263,7 @@ class MX_DDP_Database_Talk
 
 			if( empty( $_POST['nonce'] ) ) wp_die();
 
-			if( wp_verify_nonce( $_POST['nonce'], 'mxvjfepcdata_nonce_request_front' ) ) {
+			if( wp_verify_nonce( $_POST['nonce'], 'mx_ddpdata_nonce_request_front' ) ) {
 
 				$post_type = 'post';
 
@@ -337,7 +320,7 @@ class MX_DDP_Database_Talk
 
 			if( empty( $_POST['nonce'] ) ) wp_die();
 
-			if( wp_verify_nonce( $_POST['nonce'], 'mxvjfepcdata_nonce_request_front' ) ) {
+			if( wp_verify_nonce( $_POST['nonce'], 'mx_ddpdata_nonce_request_front' ) ) {
 
 				$post_type = 'post';
 
@@ -390,9 +373,24 @@ class MX_DDP_Database_Talk
 
 				$posts_id_results = $wpdb->get_results( $sql_str );
 
+				// thumbnail size
+				$thumbnail_size = 'full';
+
+				if( $post_type === 'post' ) {
+
+					$thumbnail_size = 'mx_news_thumbnail';
+
+				}
+
+				if( $post_type === 'leeds_data' ) {
+
+					$thumbnail_size = 'mx_square_thumbnail';
+
+				}
+
 				foreach ( $posts_id_results as $key => $value ) {
 
-					$the_thumbnail = get_the_post_thumbnail_url( $value->ID );
+					$the_thumbnail = get_the_post_thumbnail_url( $value->ID, $thumbnail_size );
 
 					$posts_id_results[$key]->the_thumbnail = $the_thumbnail;
 

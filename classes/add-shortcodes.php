@@ -14,14 +14,14 @@ class MX_DDP_Add_Shortcodes
 	{
 
 		// ddp's form
-		add_shortcode( 'mx_ddp_page_template', array( 'MX_DDP_Add_Shortcodes', 'mxffi_add_ddp_template' ) );
+		add_shortcode( 'mx_ddp_post_template', array( 'MX_DDP_Add_Shortcodes', 'mx_ddp_add_ddp_template' ) );
 
 		// Display list of questions
 		
 	}
 
 		// form
-		public static function mxffi_add_ddp_template( $atts )
+		public static function mx_ddp_add_ddp_template( $atts )
 		{
 			ob_start(); 
 
@@ -43,10 +43,9 @@ class MX_DDP_Add_Shortcodes
 				
 			</script>
 
-			<?php if( isset( $atts['taxonomy'] ) AND isset( $atts['term_ids'] ) ) : ?>
+			<?php if( isset( $atts['term_ids'] ) ) : ?>
 
-				<?php 
-					$taxonomy = $atts['taxonomy'];
+				<?php
 
 					$term_ids = explode( ',', $atts['term_ids'] );	
 				?>
@@ -60,7 +59,6 @@ class MX_DDP_Add_Shortcodes
 						<?php foreach ( $term_ids as $key => $value ) : ?>
 
 							{
-								taxonomy: '<?php echo $taxonomy; ?>',
 								field: 'id',
 								terms: '<?php echo $value; ?>'
 							},
@@ -76,6 +74,7 @@ class MX_DDP_Add_Shortcodes
 
 				<!-- search -->
 				<mx_ddp_search
+					v-if="post_type === 'post'"
 					:pageloading="pageLoading"
 					@mx-search-request="searchQuestion"
 				></mx_ddp_search>
@@ -87,6 +86,7 @@ class MX_DDP_Add_Shortcodes
 					:pageloading="pageLoading"
 					:load_img="loadImg"
 					:no_items="noItemsDisplay"
+					:post_type="post_type"
 				></mx_ddp_list_items>
 
 				<!-- pagination -->
@@ -109,9 +109,6 @@ class MX_DDP_Add_Shortcodes
 					:load_img="loadImg"
 					:load_more_progress="load_more_progress"
 				></mx_ddp_load_more_button>
-
-				<!-- form -->
-				<!-- <mx_ddp_form></mx_ddp_form> -->
 
 			</div>
 

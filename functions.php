@@ -14,14 +14,17 @@
 
 	}
 
-	mx_debug_to_file( MX_DDP_ABS_URL );
-
 	// Global files version
 	if ( ! defined( 'MX_DDP_VERSION' ) ) {
 
 		define( 'MX_DDP_VERSION', time() );
 
 	}
+
+	/**
+	* Helpers
+	*/
+	require_once MX_DDP_ABS_PATH . 'core/helpers.php';
 
 	/**
 	* Register scrtipts and styles

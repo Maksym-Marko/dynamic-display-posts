@@ -153,30 +153,102 @@ Vue.component( 'mx_ddp_item', {
 		ddpitemdata: {
 			type: Object,
 			required: true
+		},
+		post_type: {
+			type: String,
+			required: true
 		}
 	},
 
 	template: `
-	<div class="col-xl-4 col-lg-6 col-sm-6 col-12">
-      <div class="card cmt-people-card cmt-shadow">
-        <img :src="the_thumbnail" class="card-img-top" alt="...">
-        <div class="card-body">
-          <div class="card-text">
-            <p class="card-text__name font-weight-light">
-            	<a :href="the_permalink" class="mx-people-link">{{ the_title }}</a>
-            </p>
-            <p class="card-text__post">{{ post_excerpt }}</p>
-          </div>
+	<div :class="get_classes_wrap">
+
+		<!-- post-type post -->
+		<div 
+			v-if="post_type === 'post'"
+			class="cmt-shadow mx-news-item-wrap"
+		>
+                        
+            <a :href="the_permalink" class="mx-news-image">
+            	<img :src="the_thumbnail" alt="">
+            </a>
+
+            <div class="mx-news-content">
+              
+              <div class="mx-date">{{ the_date }}</div>
+
+              <h3 class="mx-black-title">
+                <a :href="the_permalink">{{ the_title }}</a>
+              </h3>
+
+            </div>
+
+            <div 
+            	v-if="ddpitemdata.tags"
+            	class="mx-news-footer"
+            >
+
+              <a 
+              	v-for="tag in ddpitemdata.tags"
+              	:href="tag.tag_link"
+              >{{ tag.name }}</a>
+
+            </div>
+
         </div>
-      </div>
+
+        <div v-else-if="post_type === 'book_data'">
+
+        	<div class="mx-data-list-item">
+                      
+              <a :href="the_permalink" class="mx-data-image"><img :src="the_thumbnail" alt=""></a>
+
+              <div class="mx-data-list-item-content">
+                
+                <h3>{{ the_title }}</h3>
+
+                {{ post_excerpt }}
+                <a :href="the_permalink"><span>Learn more</span> <i class="fas fa-arrow-right"></i></a>
+
+              </div>
+
+            </div>
+
+        </div>
+
+        <div v-else>
+
+        	<div class="mx-default">
+		        <img :src="the_thumbnail" alt="...">
+		        <a :href="the_permalink">{{ the_title }}</a>
+		        <p>{{ post_excerpt }}</p>
+		    </div>
+
+        </div>
+
     </div>
 	`,
 	data() {
 		return {
-			no_user_phot: mxvjfepcdata_obj_front.no_user_phot
+			no_phot: mx_ddpdata_obj_front.no_phot
 		}
 	},
 	computed: {
+
+		get_classes_wrap() {
+
+			let classes = 'col-xl-6 col-lg-6 col-12'
+
+			// book_data CPT
+			if( this.post_type === 'book_data' ) {
+
+				classes = ''
+
+			}
+
+			return classes
+
+		},
 		the_id() {
 			return this.ddpitemdata.ID
 		},
@@ -190,7 +262,7 @@ Vue.component( 'mx_ddp_item', {
 		},
 		the_thumbnail() {
 
-			let thumbnail = this.no_user_phot
+			let thumbnail = this.no_phot
 
 			if( this.ddpitemdata.the_thumbnail ) {
 
@@ -236,8 +308,10 @@ Vue.component( 'mx_ddp_item', {
 			let year = date.getFullYear()
 
 			return day + '/' + month + '/' + year
-		},
+		}
+
 	}
+	
 } )
 
 // list of items
@@ -264,12 +338,16 @@ Vue.component( 'mx_ddp_list_items', {
 			type: String,
 			required: true
 		},
+		post_type: {
+			type: String,
+			required: true
+		}
 	},
 	template: `
 		<div>
 
 			<div v-if="parsejsonerror">
-				${mxvjfepcdata_obj_front.texts.error_getting}
+				${mx_ddpdata_obj_front.texts.error_getting}
 			</div>
 			<div v-else>
 
@@ -284,7 +362,7 @@ Vue.component( 'mx_ddp_list_items', {
 
 				</div>
 				<div 
-					class="row"
+					:class="get_classes_wrap"
 					v-else
 				>
 
@@ -292,6 +370,7 @@ Vue.component( 'mx_ddp_list_items', {
 						v-for="item in get_items"
 						:key="item.ID"				
 						:ddpitemdata="item"
+						:post_type="post_type"
 					></mx_ddp_item>
 
 				</div>
@@ -305,9 +384,25 @@ Vue.component( 'mx_ddp_list_items', {
 		}
 	},
 	computed: {
+
+		get_classes_wrap() {
+
+			let classes = 'mx-news-list row'
+
+			// book_data CPT
+			if( this.post_type === 'book_data' ) {
+
+				classes = 'mx-data-list'
+
+			}	
+
+			return classes
+
+		},
 		get_items() {
 			return this.getddpitems
-		}		
+		}
+
 	}
 
 } )
@@ -373,228 +468,23 @@ Vue.component( 'mx_ddp_pagination',	{
 	}
 } )
 
-// form
-Vue.component( 'mx_ddp_form',
-	{
-		template: `
-			<div class="mx-iile-ddp-form-wrap" id="mx-iile-question-form">
-				<div class="mx-form-title">
-	                <span>${mxvjfepcdata_obj_front.texts.call_to_question}</span>
-	            </div>
-
-	            <form
-					@submit.prevent="onSubmit"
-					class="mx-iile-ddp-form"
-					:class="[
-						invalidForm ? 'mx_invalid_form' : '',
-						messageSending ? 'mx_message_sending' : '',
-						messageHasSent ? 'mx-message-has-sent' : ''
-					]" 
-				>
-					<div class="mx-two-inputs-row">
-						<div class="mx-form-control">
-							<input
-								type="text"
-								placeholder="${mxvjfepcdata_obj_front.texts.p_your_name}"
-								v-model="user_name"
-								:class="{mx_empty_field: !user_name}"
-							/>
-							<small>${mxvjfepcdata_obj_front.texts.your_name}</small>
-						</div>
-
-						<div class="mx-form-control">
-							<input
-								type="email"
-								placeholder="${mxvjfepcdata_obj_front.texts.p_your_email}"
-								v-model="user_email"
-								:class="[!user_email ? 'mx_empty_field' : '', !validateEmail( user_email ) ? 'mx_incorrect_email' : '']"
-							/>
-							<small>${mxvjfepcdata_obj_front.texts.your_email}</small>
-							<small class="mx_small_inv_email">${mxvjfepcdata_obj_front.texts.your_email_failed}</small>
-						</div>
-					</div>
-
-					<div class="mx-form-control">
-						<input
-							type="text"
-							placeholder="${mxvjfepcdata_obj_front.texts.subject}"
-							v-model="subject"
-							:class="{mx_empty_field: !subject}"
-						/>
-						<small>${mxvjfepcdata_obj_front.texts.enter_subject}</small>
-					</div>
-
-					<div class="mx-form-control">
-						<input
-							type="checkbox"
-							id="mx_agrement"
-							v-model="agrement"
-							:class="{mx_empty_field: !agrement}"
-						/>
-						<label for="mx_agrement">
-							${mxvjfepcdata_obj_front.texts.agre_text} <a href="${mxvjfepcdata_obj_front.texts.agre_link}" target="_blank">${mxvjfepcdata_obj_front.texts.agre_doc_name}</a>
-						</label>
-						<small>${mxvjfepcdata_obj_front.texts.agre_failed}</small>
-					</div>
-
-					<div class="mx-form-control"> 
-						<textarea
-							cols="30" rows="10"
-							placeholder="${mxvjfepcdata_obj_front.texts.your_message}"
-							v-model="message"
-							:class="{mx_empty_field: !message}"
-						></textarea>
-						<small>${mxvjfepcdata_obj_front.texts.your_message_failed}</small>
-					</div>
-
-					<!--<div class="mx-recaptcha-wrap">
-						<vue-recaptcha sitekey="6Lfm3u8UAAAAAPmFbWF8HqhUi2Erc3p3luZoFpj4"
-							@verify="getRecaptchaVerify"
-							@expired="getRecaptchaExpired"
-							:class="{mx_empty_field: !re_captcha}"></vue-recaptcha>
-						<small>Проверка не пройдена</small>
-					</div>-->			
-				
-					<div class="mx-send-message">
-						<img :src="load_img" alt="" class="mx-sending-progress" />
-						<button>${mxvjfepcdata_obj_front.texts.submit}</button>
-					</div>
-					
-					<div class="mx-thank-you-for-message">
-						<span>${mxvjfepcdata_obj_front.texts.success_sent}</span>
-					</div>
-
-				</form>
-			</div>
-		`,
-		data() {
-			return {
-				user_name: null,
-				user_email: null,
-				agrement: false,
-				subject: null,
-				message: null,
-				invalidForm: false,
-				load_img: mxvjfepcdata_obj_front.loading_img,
-				messageSending: false,
-				messageHasSent: false
-				//, re_captcha: null
-			}
-		},
-		methods: {
-			getRecaptchaVerify( response ) {
-
-				this.re_captcha = response
-
-			},
-			// getRecaptchaExpired() {
-
-			// 	this.re_captcha = null
-
-			// 	console.log( 'expired' )
-
-			// },
-			onSubmit() {
-
-				if( !this.messageHasSent ) {
-
-					this.messageSending = true
-
-					if(
-						this.user_name &&
-						this.user_email &&
-						this.agrement &&
-						this.subject &&
-						this.message 
-						//&& this.re_captcha
-					) {
-
-						// post
-						var _this = this;
-
-						var data = {
-
-							action: 'mx_ddp_iile',
-							nonce: mxvjfepcdata_obj_front.nonce,
-
-							user_name: 	_this.user_name,
-							user_email: _this.user_email,
-							subject: 	_this.subject,
-							message: 	_this.message,
-							tax_query: _this.tax_query,
-							post_type: _this.post_type
-						};
-
-						jQuery.post( mxvjfepcdata_obj_front.ajax_url, data, function( response ) {
-
-							_this.sentDataReaction( response );							
-
-						} );
-
-					} else {
-
-						this.invalidForm = true
-
-						this.messageSending = false
-
-					}
-					this.validateEmail( this.user_email )
-
-				}				
-
-			},
-			validateEmail( email ) {
-
-			    let patern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-				
-				return patern.test( String( email ).toLowerCase() )
-
-			},
-			sentDataReaction( response ) {
-
-				if( response === 'integer' ) {
-
-					this.user_name = null
-					this.user_email = null
-					this.agrement = false
-					this.subject = null
-					this.message = null
-
-					this.messageHasSent = true
-
-					this.messageSending = false
-
-					this.invalidForm = false
-
-				} else {
-
-					this.messageSending = false
-					
-				}				
-
-			}
-
-		}
-	}
-)
-
 if( document.getElementById( 'mx_ddp' ) ) {
 
 	var app = new Vue( {
 		el: '#mx_ddp',
 		data: {
 			noItemsMessages: {
-				noItemsInDB: mxvjfepcdata_obj_front.texts.no_questions,
-				noSearchItems: mxvjfepcdata_obj_front.texts.nothing_found
+				noItemsInDB: mx_ddpdata_obj_front.texts.no_questions,
+				noSearchItems: mx_ddpdata_obj_front.texts.nothing_found
 			},
 			noItemsDisplay: '',
 			ddpCurrentPage: 1,
-			ddpPerPage: 2,
+			ddpPerPage: 10,
 			ddpCount: 0,
 			ddpItems: [],
 			parseJSONerror: false,
 			pageLoading: true,
-			loadImg: mxvjfepcdata_obj_front.loading_img,
+			loadImg: mx_ddpdata_obj_front.loading_img,
 			query: '',
 			tax_query: mx_ddp_tax_query,
 			load_more_progress: false,
@@ -612,7 +502,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 				let data = {
 
 					action: 'mx_ddp_load_more_items',
-					nonce: mxvjfepcdata_obj_front.nonce,
+					nonce: mx_ddpdata_obj_front.nonce,
 					current_page: _this.ddpCurrentPage + 1,
 					ddp_per_page: _this.ddpPerPage,
 					query: query,
@@ -620,7 +510,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 					post_type: _this.post_type
 				};			
 
-				jQuery.post( mxvjfepcdata_obj_front.ajax_url, data, function( response ) {
+				jQuery.post( mx_ddpdata_obj_front.ajax_url, data, function( response ) {
 
 					if( _this.isJSON( response ) ) {
 
@@ -679,7 +569,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 				var data = {
 
 					action: 'mx_search_ddp_items',
-					nonce: mxvjfepcdata_obj_front.nonce,
+					nonce: mx_ddpdata_obj_front.nonce,
 					current_page: _this.ddpCurrentPage,
 					ddp_per_page: _this.ddpPerPage,
 					query: query,
@@ -687,7 +577,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 					post_type: _this.post_type
 				};			
 
-				jQuery.post( mxvjfepcdata_obj_front.ajax_url, data, function( response ) {
+				jQuery.post( mx_ddpdata_obj_front.ajax_url, data, function( response ) {
 
 					if( _this.isJSON( response ) ) {
 
@@ -748,13 +638,13 @@ if( document.getElementById( 'mx_ddp' ) ) {
 				var data = {
 
 					action: 'mx_get_count_ddp_items',
-					nonce: mxvjfepcdata_obj_front.nonce,
+					nonce: mx_ddpdata_obj_front.nonce,
 					query: _query,
 					tax_query: _this.tax_query,
 					post_type: _this.post_type
 				};				
 
-				jQuery.post( mxvjfepcdata_obj_front.ajax_url, data, function( response ) {
+				jQuery.post( mx_ddpdata_obj_front.ajax_url, data, function( response ) {
 
 					let count = parseInt( response )
 
@@ -776,7 +666,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 				var data = {
 
 					action: 'mx_get_ddp_items',
-					nonce: mxvjfepcdata_obj_front.nonce,
+					nonce: mx_ddpdata_obj_front.nonce,
 					current_page: _this.ddpCurrentPage,
 					ddp_per_page: _this.ddpPerPage,
 					query: _this.query,
@@ -784,7 +674,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 					post_type: _this.post_type
 				};			
 
-				jQuery.post( mxvjfepcdata_obj_front.ajax_url, data, function( response ) {
+				jQuery.post( mx_ddpdata_obj_front.ajax_url, data, function( response ) {
 
 					if( _this.isJSON( response ) ) {
 
