@@ -207,7 +207,7 @@ Vue.component( 'mx_ddp_item', {
                 
                 <h3>{{ the_title }}</h3>
 
-                {{ post_excerpt }}
+                <div v-html="post_excerpt"></div>
                 <a :href="the_permalink"><span>Learn more</span> <i class="fas fa-arrow-right"></i></a>
 
               </div>
@@ -221,7 +221,7 @@ Vue.component( 'mx_ddp_item', {
         	<div class="mx-default">
 		        <img :src="the_thumbnail" alt="...">
 		        <a :href="the_permalink">{{ the_title }}</a>
-		        <p>{{ post_excerpt }}</p>
+		        <div v-html="post_excerpt"></div>
 		    </div>
 
         </div>

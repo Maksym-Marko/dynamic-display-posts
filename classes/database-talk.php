@@ -180,10 +180,12 @@ class MX_DDP_Database_Talk
 
 					$tax_id = $_POST["tax_query"][0]['terms'];
 
+					$tax_ids = $tax_id;
+
 					$sql_str = "SELECT ID, post_title, post_date, post_title, post_content, post_excerpt				
 						FROM $posts_table
 						INNER JOIN $term_relationships_table ON $posts_table.ID = $term_relationships_table.object_id
-						WHERE $term_relationships_table.term_taxonomy_id = $tax_id
+						WHERE $term_relationships_table.term_taxonomy_id IN( $tax_ids )
 							AND $posts_table.post_status = 'publish'
 							AND ( $posts_table.post_title LIKE '%$query%'
 								OR $posts_table.post_content LIKE '%$query%' )

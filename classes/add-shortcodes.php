@@ -23,13 +23,33 @@ class MX_DDP_Add_Shortcodes
 		// form
 		public static function mx_ddp_add_ddp_template( $atts )
 		{
-			ob_start(); 
+			ob_start();
 
+			// post type
 			$post_type = 'post';
 
 			if( isset( $atts['post_type'] ) ) {
 
 				$post_type = $atts['post_type'];
+
+			}
+
+			// taxonomy
+			$term_id = NULL;
+
+			if( is_category() ) {
+
+				$queried_object = get_queried_object();
+
+				$term_id = $queried_object->term_id;
+
+			}
+
+			if( is_tax() ) {
+
+				$queried_object = get_queried_object();
+
+				$term_id = $queried_object->term_id;
 
 			}
 
@@ -43,11 +63,11 @@ class MX_DDP_Add_Shortcodes
 				
 			</script>
 
-			<?php if( isset( $atts['term_ids'] ) ) : ?>
+			<?php if( $term_id !== NULL ) : ?>
 
 				<?php
 
-					$term_ids = explode( ',', $atts['term_ids'] );	
+					$term_ids = [$term_id];	
 				?>
 
 				<script>
@@ -74,7 +94,6 @@ class MX_DDP_Add_Shortcodes
 
 				<!-- search -->
 				<mx_ddp_search
-					v-if="post_type === 'post'"
 					:pageloading="pageLoading"
 					@mx-search-request="searchQuestion"
 				></mx_ddp_search>
