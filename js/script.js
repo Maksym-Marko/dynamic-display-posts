@@ -486,9 +486,9 @@ if( document.getElementById( 'mx_ddp' ) ) {
 			pageLoading: true,
 			loadImg: mx_ddpdata_obj_front.loading_img,
 			query: '',
-			tax_query: mx_ddp_tax_query,
+			tax_query: [],
 			load_more_progress: false,
-			post_type: mx_ddp_post_type
+			post_type: 'post'
 		},
 		methods: {
 			loadMoreItems() {
@@ -700,9 +700,42 @@ if( document.getElementById( 'mx_ddp' ) ) {
 			        return false;
 			    }
 			    return true;
+			},
+			prepareTaxQuery() {
+
+				if( mx_ddp_tax_query !== 'undefined' ) {
+
+					this.tax_query = mx_ddp_tax_query
+
+				} else {
+
+					this.tax_query = []
+
+				}
+				
+			},
+			preparePostType() {
+
+				if( mx_ddp_post_type !== 'undefined' ) {
+
+					this.post_type = mx_ddp_post_type
+
+				} else {
+
+					this.post_type = 'post'
+
+				}
+
 			}
+			
 		},
 		beforeMount() {
+
+			// prepate tax query
+			this.prepareTaxQuery()
+
+			// prepare post type
+			this.preparePostType()
 
 			// get current page
 			this.get_current_page()
@@ -712,6 +745,7 @@ if( document.getElementById( 'mx_ddp' ) ) {
 
 			// get ddp items
 			this.get_ddp_items()
+
 		}
 	} )
 

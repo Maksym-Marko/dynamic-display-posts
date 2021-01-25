@@ -75,14 +75,20 @@ class MX_DDP_Database_Talk
 						ORDER BY post_date DESC
 						LIMIT $current_page, $ddp_per_page";
 
+
+				// tax_query
+
+
+
+
 				if( isset( $_POST["tax_query"] ) ) {
 
-					$tax_id = $_POST["tax_query"][0]['terms'];
+					$tax_ids = implode( ',', $_POST['tax_query'] );
 
 					$sql_str = "SELECT ID, post_title, post_date, post_title, post_content, post_excerpt				
 						FROM $posts_table
 						INNER JOIN $term_relationships_table ON $posts_table.ID = $term_relationships_table.object_id
-						WHERE $term_relationships_table.term_taxonomy_id = $tax_id
+						WHERE $term_relationships_table.term_taxonomy_id IN( $tax_ids )
 							AND $posts_table.post_status = 'publish'
 							AND ( $posts_table.post_title LIKE '%$query%'
 								OR $posts_table.post_content LIKE '%$query%' )
@@ -174,13 +180,11 @@ class MX_DDP_Database_Talk
 							AND ( post_title LIKE '%$query%'
 								OR post_content LIKE '%$query%' )
 						ORDER BY post_date DESC
-						LIMIT $current_page, $ddp_per_page";
+						LIMIT $current_page, $ddp_per_page";				
 
-				if( isset( $_POST["tax_query"] ) ) {
+				if( isset( $_POST['tax_query'] ) ) {
 
-					$tax_id = $_POST["tax_query"][0]['terms'];
-
-					$tax_ids = $tax_id;
+					$tax_ids = implode( ',', $_POST['tax_query'] );
 
 					$sql_str = "SELECT ID, post_title, post_date, post_title, post_content, post_excerpt				
 						FROM $posts_table
@@ -293,12 +297,12 @@ class MX_DDP_Database_Talk
 
 				if( isset( $_POST["tax_query"] ) ) {
 
-					$tax_id = $_POST["tax_query"][0]['terms'];
+					$tax_ids = implode( ',', $_POST['tax_query'] );
 
 					$sql_str = "SELECT COUNT(ID)				
 						FROM $posts_table
 						INNER JOIN $term_relationships_table ON $posts_table.ID = $term_relationships_table.object_id
-						WHERE $term_relationships_table.term_taxonomy_id = $tax_id
+						WHERE $term_relationships_table.term_taxonomy_id IN( $tax_ids )
 							AND $posts_table.post_status = 'publish'
 							AND ( $posts_table.post_title LIKE '%$query%'
 								OR $posts_table.post_content LIKE '%$query%' )
@@ -358,12 +362,12 @@ class MX_DDP_Database_Talk
 
 				if( isset( $_POST["tax_query"] ) ) {
 
-					$tax_id = $_POST["tax_query"][0]['terms'];
+					$tax_ids = implode( ',', $_POST['tax_query'] );
 
 					$sql_str = "SELECT ID, post_title, post_date, post_title, post_content, post_excerpt
 						FROM $posts_table
 						INNER JOIN $term_relationships_table ON $posts_table.ID = $term_relationships_table.object_id
-						WHERE $term_relationships_table.term_taxonomy_id = $tax_id
+						WHERE $term_relationships_table.term_taxonomy_id IN( $tax_ids )
 							AND $posts_table.post_status = 'publish'
 							AND ( $posts_table.post_title LIKE '%$query%'
 								OR $posts_table.post_content LIKE '%$query%' )

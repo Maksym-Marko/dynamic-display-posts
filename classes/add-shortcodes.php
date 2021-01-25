@@ -35,13 +35,13 @@ class MX_DDP_Add_Shortcodes
 			}
 
 			// taxonomy
-			$term_id = NULL;
+			$term_ids = NULL;
 
 			if( is_category() ) {
 
 				$queried_object = get_queried_object();
 
-				$term_id = $queried_object->term_id;
+				$term_ids = [$queried_object->term_id];
 
 			}
 
@@ -49,7 +49,15 @@ class MX_DDP_Add_Shortcodes
 
 				$queried_object = get_queried_object();
 
-				$term_id = $queried_object->term_id;
+				$term_ids = [$queried_object->term_id];
+
+			}
+
+			if( isset( $atts['term_ids'] ) ) {
+
+				$ids = preg_replace( '/[^0-9]+/', ',', $atts['term_ids'] );
+
+				$term_ids = explode( ',', $ids );
 
 			}
 
@@ -63,12 +71,7 @@ class MX_DDP_Add_Shortcodes
 				
 			</script>
 
-			<?php if( $term_id !== NULL ) : ?>
-
-				<?php
-
-					$term_ids = [$term_id];	
-				?>
+			<?php if( $term_ids !== NULL ) : ?>
 
 				<script>
 
@@ -78,10 +81,7 @@ class MX_DDP_Add_Shortcodes
 
 						<?php foreach ( $term_ids as $key => $value ) : ?>
 
-							{
-								field: 'id',
-								terms: '<?php echo $value; ?>'
-							},
+							'<?php echo $value; ?>',
 
 						<?php endforeach; ?>
 					];
@@ -116,7 +116,7 @@ class MX_DDP_Add_Shortcodes
 					:ddpperpage="ddpPerPage"
 					:ddpcurrentpage="ddpCurrentPage"					
 					@get-ddp-page="changeddpPage"
-				></mx_ddp_pagination>	 -->	
+				></mx_ddp_pagination> -->
 
 				<mx_ddp_load_more_button
 					:pageloading="pageLoading"
